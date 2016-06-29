@@ -11,6 +11,7 @@ import UIKit
 class Tweet: NSObject {
     
     var user: User?
+    var id: Int = 0
     var text: NSString?
     var timestamp: NSDate?
     var retweetCount: Int = 0
@@ -20,7 +21,8 @@ class Tweet: NSObject {
     
     init(dictionary: NSDictionary) {
         user = User(dictionary: dictionary["user"] as! NSDictionary)
-        print("\(user)")
+        
+        id = (dictionary["id"] as? Int)!
         
         text = dictionary["text"] as? String
         

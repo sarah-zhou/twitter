@@ -28,13 +28,22 @@ class DetailViewController: UIViewController {
     }
     
     @IBAction func retweet(sender: AnyObject) {
-        
+        client.tweet("\(tweet.id)", success: { (User) -> () in
+            print("yay retweeted something!")
+            }, failure: { (error: NSError) -> () in
+                print("Error: \(error.localizedDescription)")
+        })
     }
 
-    @IBAction func favorite(sender: AnyObject) {
-        
+    @IBAction func like(sender: AnyObject) {
+        client.like(tweet.id, success: { (User) -> () in
+            print("yay retweeted something!")
+            }, failure: { (error: NSError) -> () in
+                print("Error: \(error.localizedDescription)")
+        })
     }
     
+    let client = TwitterClient.sharedInstance
     var tweet: Tweet!
     
     override func viewDidLoad() {
@@ -86,7 +95,6 @@ class DetailViewController: UIViewController {
         if segue.identifier == "showOtherUser" {
             let otherUserViewController = segue.destinationViewController as! OtherUserViewController
             otherUserViewController.user = tweet.user
-            print("\(tweet.user?.screenname)")
         }
     }
 }

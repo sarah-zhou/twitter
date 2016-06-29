@@ -31,8 +31,8 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func userTweets(screen_name: String, success: ([Tweet]) -> (), failure: (NSError) -> ()) {
-        let params = ["screen_name": screen_name]
+    func userTweets(screen_name: String, exclude_replies: Bool, success: ([Tweet]) -> (), failure: (NSError) -> ()) {
+        let params = ["screen_name": screen_name, "exclude_replies": exclude_replies]
         
         GET("1.1/statuses/user_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             let dictionaries = response as! [NSDictionary]
@@ -81,17 +81,30 @@ class TwitterClient: BDBOAuth1SessionManager {
     }
     
     func tweet(status: String, success: () -> (), failure: (NSError) -> ()) {
-        
-        POST("1.1/statuses/update.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+        let params = ["status": status]
+
+        POST("1.1/statuses/update.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             print("tweet: \(response)")
             }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
                 failure(error)
         })
     }
     
-    func retweet(success: (User) -> (), failure: (NSError) -> ()) {
-        POST("1.1/statuses/retweet/:id.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+    func retweet(id: Int, success: (User) -> (), failure: (NSError) -> ()) {
+        let params = ["id": id]
+        
+        POST("1.1/statuses/retweet/:id.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             print("retweet: \(response)")
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                failure(error)
+        })
+    }
+    
+    func like(id: Int, success: (User) -> (), failure: (NSError) -> ()) {
+        let params = ["id": id]
+        
+        POST("1.1/favorites/create.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            print("favorite: \(response)")
             }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
                 failure(error)
         })

@@ -18,6 +18,18 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         TwitterClient.sharedInstance.logout()
     }
     
+    @IBAction func reply(sender: AnyObject) {
+        
+    }
+    
+    @IBAction func retweet(sender: AnyObject) {
+        
+    }
+    
+    @IBAction func favorite(sender: AnyObject) {
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -90,23 +102,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         cell.retweetedImageView.hidden = !(tweet.retweeted!)
         cell.favoritedImageView.hidden = !(tweet.favorited!)
         
-        let imageUrl = tweet.user?.profileUrl
-        
-        // Download task:
-        // - sharedSession = global NSURLCache, NSHTTPCookieStorage and NSURLCredentialStorage objects.
-        let task = NSURLSession.sharedSession().dataTaskWithURL(imageUrl!) { (responseData, responseUrl, error) -> Void in
-            // if responseData is not null...
-            if let data = responseData{
-                
-                // execute in UI thread
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    cell.profilePic.image = UIImage(data: data)
-                })
-            }
-        }
-        
-        // Run task
-        task.resume()
+        cell.profilePic.setImageWithURL((tweet.user?.profileUrl)!)
         
         return cell
     }
@@ -116,7 +112,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // Hides the RefreshControl
     func refreshControlAction(refreshControl: UIRefreshControl) {
         
-        self.tweetsTableView.reloadData()
+        self.loadData()
         
         // Tell the refreshControl to stop spinning
         refreshControl.endRefreshing()

@@ -20,7 +20,6 @@ class OtherUserViewController: UIViewController, UITableViewDataSource, UITableV
     @IBOutlet weak var numFollowing: UILabel!
     
     @IBOutlet weak var tableView: UITableView!
-    
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
     @IBAction func indexChanged(sender: AnyObject) {
@@ -45,8 +44,6 @@ class OtherUserViewController: UIViewController, UITableViewDataSource, UITableV
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("other user screenname: \(user.screenname)")
-        
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -54,45 +51,26 @@ class OtherUserViewController: UIViewController, UITableViewDataSource, UITableV
         handleLabel.text = "@\(user.screenname as! String)"
         bioLabel.text = user.tagline as? String
         
-        let followers = user.followers
-        let following = user.following
+        numTweets.text = self.format(user.tweets)
+        numFollowers.text = self.format(user.followers)
+        numFollowing.text = self.format(user.following)
         
-        if followers > 1000000 {
-            numFollowers.text = String(format: "%.0f", Double(followers) / 1000000.0) + "m"
-        } else if followers > 1000 {
-            numFollowers.text = String(format: "%.0f", Double(followers) / 1000.0) + "k"
-        }
-        
-        if following > 1000000 {
-            numFollowing.text = String(format: "%.0f", Double(following) / 1000000.0) + "m"
-        } else if followers > 1000 {
-            numFollowing.text = String(format: "%.0f", Double(following) / 1000.0) + "k"
-        }
-        
-        let imageUrl = user?.profileUrl
-        
-        // Download task:
-        // - sharedSession = global NSURLCache, NSHTTPCookieStorage and NSURLCredentialStorage objects.
-        let task = NSURLSession.sharedSession().dataTaskWithURL(imageUrl!) { (responseData, responseUrl, error) -> Void in
-            // if responseData is not null...
-            if let data = responseData{
-                
-                // execute in UI thread
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.profilePic.layer.borderWidth = 3
-                    self.profilePic.layer.borderColor = UIColor.whiteColor().CGColor
-                    // self.profilePic.layer.cornerRadius = self.profilePic.frame.height/10
-                    self.profilePic.image = UIImage(data: data)
-                })
-            }
-        }
-        
-        // Run task
-        task.resume()
+        profilePic.setImageWithURL((user?.profileUrl)!)
+        backgroundPic.setImageWithURL((user?.backgroundUrl)!)
         
         self.loadData()
+        
+        // Initialize a UIRefreshControl
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
     }
-
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.indexChanged(self)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -100,7 +78,7 @@ class OtherUserViewController: UIViewController, UITableViewDataSource, UITableV
     
     func loadData() {
         let client = TwitterClient.sharedInstance
-        client.userTweets((user.screenname as? String)!, success: { (tweets: [Tweet]) in
+        client.userTweets((user.screenname as? String)!, exclude_replies: true, success: { (tweets: [Tweet]) in
             self.tweets = tweets
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
@@ -110,6 +88,21 @@ class OtherUserViewController: UIViewController, UITableViewDataSource, UITableV
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
         })
+    }
+    
+    func format(number: Int) -> String {
+        
+        let formatted: String
+        
+        if number > 1000000 {
+            formatted = String(format: "%.0f", Double(number) / 1000000.0) + "m"
+        } else if number > 1000 {
+            formatted = String(format: "%.0f", Double(number) / 1000.0) + "k"
+        } else {
+            formatted = "\(number)"
+        }
+        
+        return formatted
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -125,51 +118,32 @@ class OtherUserViewController: UIViewController, UITableViewDataSource, UITableV
         let name = tweet.user?.name as? String
         let handle = tweet.user?.screenname as? String
         let text = tweet.text as? String
-        let numRetweets = tweet.retweetCount
-        let numFavorites = tweet.favoritesCount
         
         cell.tweetLabel.text = text
         cell.nameLabel.text = name
         cell.handleLabel.text = "@\(handle!)"
         
-        if numRetweets > 1000000 {
-            cell.numRetweets.text = String(format: "%.0f", Double(numRetweets) / 1000000.0) + "m"
-        } else if numRetweets > 1000 {
-            cell.numRetweets.text = String(format: "%.0f", Double(numRetweets) / 1000.0) + "k"
-        } else {
-            cell.numRetweets.text = "\(numRetweets)"
-        }
-        
-        if numFavorites > 1000000 {
-            cell.numFavorites.text = String(format: "%.0f", Double(numFavorites) / 1000000.0) + "m"
-        } else if numFavorites > 1000 {
-            cell.numFavorites.text = String(format: "%.0f", Double(numFavorites) / 1000.0) + "k"
-        } else {
-            cell.numFavorites.text = "\(numFavorites)"
-        }
+        cell.numRetweets.text = self.format(tweet.retweetCount)
+        cell.numFavorites.text = self.format(tweet.favoritesCount)
         
         cell.retweetedImageView.hidden = !(tweet.retweeted!)
         cell.favoritedImageView.hidden = !(tweet.favorited!)
         
-        let imageUrl = tweet.user?.profileUrl
-        
-        // Download task:
-        // - sharedSession = global NSURLCache, NSHTTPCookieStorage and NSURLCredentialStorage objects.
-        let task = NSURLSession.sharedSession().dataTaskWithURL(imageUrl!) { (responseData, responseUrl, error) -> Void in
-            // if responseData is not null...
-            if let data = responseData{
-                
-                // execute in UI thread
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    cell.profilePic.image = UIImage(data: data)
-                })
-            }
-        }
-        
-        // Run task
-        task.resume()
+        cell.profilePic.setImageWithURL((tweet.user?.profileUrl)!)
         
         return cell
+    }
+    
+    // Makes a network request to get updated data
+    // Updates the tableView with the new data
+    // Hides the RefreshControl
+    func refreshControlAction(refreshControl: UIRefreshControl) {
+        
+        self.loadData()
+        
+        // Tell the refreshControl to stop spinning
+        refreshControl.endRefreshing()
+        
     }
     
     /*

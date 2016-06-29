@@ -28,6 +28,7 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
         })
+        
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
