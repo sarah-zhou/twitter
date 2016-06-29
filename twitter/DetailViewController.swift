@@ -28,7 +28,7 @@ class DetailViewController: UIViewController {
     }
     
     @IBAction func retweet(sender: AnyObject) {
-        client.tweet("\(tweet.id)", success: { (User) -> () in
+        client.tweet(String(tweet.id), success: { (User) -> () in
             print("yay retweeted something!")
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
@@ -36,7 +36,7 @@ class DetailViewController: UIViewController {
     }
 
     @IBAction func like(sender: AnyObject) {
-        client.like(tweet.id, success: { (User) -> () in
+        client.like(String(tweet.id), success: { (User) -> () in
             print("yay retweeted something!")
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
@@ -93,8 +93,8 @@ class DetailViewController: UIViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showOtherUser" {
-            let otherUserViewController = segue.destinationViewController as! OtherUserViewController
-            otherUserViewController.user = tweet.user
+            let profileViewController = segue.destinationViewController as! ProfileViewController
+            profileViewController.user = tweet.user
         }
     }
 }

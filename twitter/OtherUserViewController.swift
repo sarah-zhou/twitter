@@ -46,7 +46,17 @@ class OtherUserViewController: UIViewController, UITableViewDataSource, UITableV
         
         tableView.dataSource = self
         tableView.delegate = self
+    
+        setupUserUI()
+        self.loadData()
         
+        // Initialize a UIRefreshControl
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
+    }
+    
+    private func setupUserUI() {
         nameLabel.text = user.name as? String
         handleLabel.text = "@\(user.screenname as! String)"
         bioLabel.text = user.tagline as? String
@@ -57,13 +67,6 @@ class OtherUserViewController: UIViewController, UITableViewDataSource, UITableV
         
         profilePic.setImageWithURL((user?.profileUrl)!)
         backgroundPic.setImageWithURL((user?.backgroundUrl)!)
-        
-        self.loadData()
-        
-        // Initialize a UIRefreshControl
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        tableView.insertSubview(refreshControl, atIndex: 0)
     }
     
     override func viewDidAppear(animated: Bool) {

@@ -201,15 +201,9 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dJj-Qd-Z1n">
                                 <rect key="frame" x="12" y="78" width="65" height="65"/>
                                 <connections>
-                                    <segue destination="JYn-hB-bRK" kind="presentation" identifier="showOtherUser" id="vOQ-sx-tYi"/>
+                                    <segue destination="4b4-dc-s3P" kind="presentation" identifier="showOtherUser" id="L2f-a7-oiw"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rhB-Oq-467">
-                                <rect key="frame" x="85" y="85" width="279" height="30"/>
-                                <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="23"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Handle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gke-bA-UfC">
                                 <rect key="frame" x="85" y="115" width="279" height="21"/>
                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="15"/>
@@ -255,7 +249,6 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="auY-fe-TCL">
                                 <rect key="frame" x="222" y="302" width="30" height="32"/>
                                 <connections>
-                                    <action selector="favorite:" destination="FKb-CY-Scv" eventType="touchUpInside" id="Ffk-Jx-xeR"/>
                                     <action selector="like:" destination="FKb-CY-Scv" eventType="touchUpInside" id="zTW-vc-ifH"/>
                                 </connections>
                             </button>
@@ -284,6 +277,12 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tweet" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rj3-lH-uxs">
                                 <rect key="frame" x="12" y="151" width="352" height="85"/>
                                 <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rhB-Oq-467">
+                                <rect key="frame" x="85" y="85" width="279" height="30"/>
+                                <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="23"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -323,9 +322,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FgS-IA-JBS">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="125"/>
-                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Handle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TLD-VE-tfc">
+                                <rect key="frame" x="11" y="182" width="353" height="21"/>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="15"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FPB-tW-FgH">
                                 <rect key="frame" x="11" y="88" width="65" height="65"/>
                             </imageView>
@@ -473,17 +475,22 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Handle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TLD-VE-tfc">
-                                <rect key="frame" x="11" y="182" width="353" height="21"/>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="15"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5iC-EJ-Zda">
+                                <rect key="frame" x="11" y="20" width="20" height="20"/>
+                                <state key="normal" image="back"/>
+                                <connections>
+                                    <action selector="back:" destination="4b4-dc-s3P" eventType="touchUpInside" id="uDe-3I-S06"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FgS-IA-JBS">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="125"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Profile" id="efr-57-R2o"/>
                     <connections>
+                        <outlet property="back" destination="5iC-EJ-Zda" id="iJC-dW-UB8"/>
                         <outlet property="backgroundPic" destination="FgS-IA-JBS" id="pHr-BW-wC9"/>
                         <outlet property="bioLabel" destination="w85-tg-moE" id="XdK-PI-aMH"/>
                         <outlet property="handleLabel" destination="TLD-VE-tfc" id="ljK-Rf-MeP"/>
@@ -797,6 +804,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="back" width="512" height="512"/>
         <image name="favorite" width="54" height="72"/>
         <image name="favorited" width="54" height="72"/>
         <image name="replied" width="65" height="72"/>
@@ -804,4 +812,7 @@
         <image name="retweet" width="75" height="72"/>
         <image name="retweeted" width="75" height="72"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="L2f-a7-oiw"/>
+    </inferredMetricsTieBreakers>
 </document>

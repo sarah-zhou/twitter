@@ -19,33 +19,54 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var numFollowers: UILabel!
     @IBOutlet weak var numFollowing: UILabel!
     
+    @IBOutlet weak var back: UIButton!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
     @IBAction func indexChanged(sender: AnyObject) {
+        setDataSource()
+    }
+    
+    @IBAction func back(sender: AnyObject) {
+        let presentingViewController: UIViewController! = self.presentingViewController
+        
+        self.dismissViewControllerAnimated(false) {
+            // go back to MainMenuView as the eyes of the user
+            presentingViewController.dismissViewControllerAnimated(false, completion: nil)
+        }
+    }
+    
+    private func setDataSource() {
         switch segmentedControl.selectedSegmentIndex
         {
         case 0:
             self.tableData = tweets
-            self.tableView.reloadData()
         case 1:
             self.tableData = favorites
-            self.tableView.reloadData()
         default:
             break;
         }
     }
     
+    var tableData: [Tweet] = [] {
+        didSet {
+            self.tableView.reloadData()
+        }
+    }
+    
     var user: User!
-    var tableData: [Tweet] = []
     var tweets: [Tweet] = []
     var favorites: [Tweet] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        user = User.currentUser!
+        if user == nil {
+            user = User.currentUser!
+            back.hidden = true
+        }
         
+        segmentedControl.selectedSegmentIndex = 0
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -58,7 +79,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         numFollowing.text = self.format(user.following)
         
         profilePic.setImageWithURL((user?.profileUrl)!)
-        //backgroundPic.setImageWithURL((user?.backgroundUrl)!)
+        backgroundPic.setImageWithURL((user?.backgroundUrl)!)
+        
+        view.sendSubviewToBack(backgroundPic)
         
         self.loadData()
         
@@ -68,17 +91,14 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.insertSubview(refreshControl, atIndex: 0)
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        self.indexChanged(self)
-    }
     
     override func viewWillAppear(animated: Bool) {
-        TwitterClient.sharedInstance.currentAccount({ (user) in
-            User.currentUser = user
-            self.user = user
-        }) { (error: NSError) in
-        }
+        super.viewWillAppear(animated)
+//        TwitterClient.sharedInstance.currentAccount({ (user) in
+//            User.currentUser = user
+//            self.user = user
+//        }) { (error: NSError) in
+//        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -90,11 +110,13 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let client = TwitterClient.sharedInstance
         client.userTweets((user.screenname as? String)!, exclude_replies: true, success: { (tweets: [Tweet]) in
             self.tweets = tweets
+            self.setDataSource()
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
         })
         client.userFavorites((user.screenname as? String)!, success: { (tweets: [Tweet]) in
             self.favorites = tweets
+            self.setDataSource()
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
         })
