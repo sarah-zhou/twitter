@@ -23,8 +23,7 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
         
         let client = TwitterClient.sharedInstance
         
-        
-        client.tweet({
+        client.tweet(tweetTextView.text, success: {
             print("yay tweeted something!")
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")

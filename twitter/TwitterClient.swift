@@ -16,9 +16,10 @@ class TwitterClient: BDBOAuth1SessionManager {
     var loginSuccess: (() -> ())?
     var loginFailure: ((NSError) -> ())?
     
-    func homeTimeline(success: ([Tweet]) -> (), failure: (NSError) -> ()) {
+    func homeTimeline(count: Int, success: ([Tweet]) -> (), failure: (NSError) -> ()) {
+        let params = ["count": count]
         
-        GET("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+        GET("1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             let dictionaries = response as! [NSDictionary]
             
             let tweets = Tweet.tweetsWithArray(dictionaries)
@@ -27,6 +28,35 @@ class TwitterClient: BDBOAuth1SessionManager {
             
         }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
             failure(error)
+        })
+    }
+    
+    func userTweets(screen_name: String, success: ([Tweet]) -> (), failure: (NSError) -> ()) {
+        let params = ["screen_name": screen_name]
+        
+        GET("1.1/statuses/user_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            let dictionaries = response as! [NSDictionary]
+            let tweets = Tweet.tweetsWithArray(dictionaries)
+            
+            success(tweets)
+            
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                failure(error)
+        })
+    }
+    
+    func userFavorites(screen_name: String, success: ([Tweet]) -> (), failure: (NSError) -> ()) {
+        let params = ["screen_name": screen_name]
+        
+        GET("1.1/favorites/list.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            let dictionaries = response as! [NSDictionary]
+            
+            let tweets = Tweet.tweetsWithArray(dictionaries)
+            
+            success(tweets)
+            
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                failure(error)
         })
     }
     
@@ -50,19 +80,18 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    /*
-    func retweet(success: (User) -> (), failure: (NSError) -> ()) {
-        POST("1.1/statuses/retweet/:id.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
-            print("retweet: \(response)")
-            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                failure(error)
-        })
-    } */
-    
-    func tweet(success: () -> (), failure: (NSError) -> ()) {
+    func tweet(status: String, success: () -> (), failure: (NSError) -> ()) {
         
         POST("1.1/statuses/update.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             print("tweet: \(response)")
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                failure(error)
+        })
+    }
+    
+    func retweet(success: (User) -> (), failure: (NSError) -> ()) {
+        POST("1.1/statuses/retweet/:id.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            print("retweet: \(response)")
             }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
                 failure(error)
         })

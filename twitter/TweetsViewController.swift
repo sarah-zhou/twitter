@@ -42,7 +42,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func loadData() {
-        TwitterClient.sharedInstance.homeTimeline({ (tweets: [Tweet]) in
+        TwitterClient.sharedInstance.homeTimeline(20, success: { (tweets: [Tweet]) in
             self.tweets = tweets
             self.tweetsTableView.reloadData()
             }, failure: { (error: NSError) -> () in
@@ -58,8 +58,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tweetsTableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
         
-        cell.selectionStyle = .None
-        
         let tweet = tweets[indexPath.row]
         
         let timestamp = tweet.timestamp
@@ -72,8 +70,22 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         cell.tweetLabel.text = text
         cell.nameLabel.text = name
         cell.handleLabel.text = "@\(handle!)"
-        cell.numRetweets.text = "\(numRetweets)"
-        cell.numFavorites.text = "\(numFavorites)"
+        
+        if numRetweets > 1000000 {
+            cell.numRetweets.text = String(format: "%.0f", Double(numRetweets) / 1000000.0) + "m"
+        } else if numRetweets > 1000 {
+            cell.numRetweets.text = String(format: "%.0f", Double(numRetweets) / 1000.0) + "k"
+        } else {
+            cell.numRetweets.text = "\(numRetweets)"
+        }
+        
+        if numFavorites > 1000000 {
+            cell.numFavorites.text = String(format: "%.0f", Double(numFavorites) / 1000000.0) + "m"
+        } else if numFavorites > 1000 {
+            cell.numFavorites.text = String(format: "%.0f", Double(numFavorites) / 1000.0) + "k"
+        } else {
+            cell.numFavorites.text = "\(numFavorites)"
+        }
         
         cell.retweetedImageView.hidden = !(tweet.retweeted!)
         cell.favoritedImageView.hidden = !(tweet.favorited!)

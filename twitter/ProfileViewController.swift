@@ -30,8 +30,24 @@ class ProfileViewController: UIViewController {
         handleLabel.text = "@\(user.screenname as! String)"
         bioLabel.text = user.tagline as? String
         
-        numFollowers.text = "\(user.followers)"
-        numFollowing.text = "\(user.following)"
+        let followers = user.followers
+        let following = user.following
+        
+        if followers > 1000000 {
+            numFollowers.text = String(format: "%.0f", Double(followers) / 1000000.0) + "m"
+        } else if followers > 1000 {
+            numFollowers.text = String(format: "%.0f", Double(followers) / 1000.0) + "k"
+        } else {
+            numFollowers.text = "\(followers)"
+        }
+        
+        if following > 1000000 {
+            numFollowing.text = String(format: "%.0f", Double(following) / 1000000.0) + "m"
+        } else if followers > 1000 {
+            numFollowing.text = String(format: "%.0f", Double(following) / 1000.0) + "k"
+        } else {
+            numFollowing.text = "\(following)"
+        }
         
         let imageUrl = user?.profileUrl
         
@@ -43,6 +59,9 @@ class ProfileViewController: UIViewController {
                 
                 // execute in UI thread
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.profilePic.layer.borderWidth = 3
+                    self.profilePic.layer.borderColor = UIColor.whiteColor().CGColor
+                    // self.profilePic.layer.cornerRadius = self.profilePic.frame.height/10
                     self.profilePic.image = UIImage(data: data)
                 })
             }
