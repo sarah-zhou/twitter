@@ -16,6 +16,12 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var handleLabel: UILabel!
     @IBOutlet weak var tweetLabel: UILabel!
     @IBOutlet weak var timestampLabel: UILabel!
+    @IBOutlet weak var numRetweets: UILabel!
+    @IBOutlet weak var numFavorites: UILabel!
+    
+    @IBOutlet weak var repliedImageView: UIImageView!
+    @IBOutlet weak var retweetedImageView: UIImageView!
+    @IBOutlet weak var favoritedImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

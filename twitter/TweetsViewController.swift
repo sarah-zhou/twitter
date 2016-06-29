@@ -25,6 +25,15 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tweetsTableView.delegate = self
         
         self.loadData()
+        
+        let logo = UIImage(named: "logo")
+        let imageView = UIImageView(image:logo)
+        self.navigationItem.titleView = imageView
+        
+        // Initialize a UIRefreshControl
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        tweetsTableView.insertSubview(refreshControl, atIndex: 0)
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,6 +52,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tweets.count
+        // how to account for infinite scrolling?
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -52,26 +62,65 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         let tweet = tweets[indexPath.row]
         
-        let text = tweet.text as? String
         let timestamp = tweet.timestamp
         let name = tweet.user?.name as? String
         let handle = tweet.user?.screenname as? String
+        let text = tweet.text as? String
+        let numRetweets = tweet.retweetCount
+        let numFavorites = tweet.favoritesCount
         
         cell.tweetLabel.text = text
         cell.nameLabel.text = name
-        cell.handleLabel.text = handle
-    
+        cell.handleLabel.text = "@\(handle!)"
+        cell.numRetweets.text = "\(numRetweets)"
+        cell.numFavorites.text = "\(numFavorites)"
+        
+        cell.retweetedImageView.hidden = !(tweet.retweeted!)
+        cell.favoritedImageView.hidden = !(tweet.favorited!)
+        
+        let imageUrl = tweet.user?.profileUrl
+        
+        // Download task:
+        // - sharedSession = global NSURLCache, NSHTTPCookieStorage and NSURLCredentialStorage objects.
+        let task = NSURLSession.sharedSession().dataTaskWithURL(imageUrl!) { (responseData, responseUrl, error) -> Void in
+            // if responseData is not null...
+            if let data = responseData{
+                
+                // execute in UI thread
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    cell.profilePic.image = UIImage(data: data)
+                })
+            }
+        }
+        
+        // Run task
+        task.resume()
+        
         return cell
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // Makes a network request to get updated data
+    // Updates the tableView with the new data
+    // Hides the RefreshControl
+    func refreshControlAction(refreshControl: UIRefreshControl) {
+        
+        self.tweetsTableView.reloadData()
+        
+        // Tell the refreshControl to stop spinning
+        refreshControl.endRefreshing()
+        
     }
-    */
-
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "showDetailViewController" {
+            let button = sender as! UIButton
+            let contentView = button.superview! as UIView
+            let cell = contentView.superview as! TweetCell
+            let indexPath = tweetsTableView.indexPathForCell(cell)
+            let tweet = tweets[indexPath!.row]
+            
+            let detailViewController = segue.destinationViewController as! DetailViewController
+            detailViewController.tweet = tweet
+        }
+    }
 }
