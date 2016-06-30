@@ -19,9 +19,58 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var numRetweets: UILabel!
     @IBOutlet weak var numFavorites: UILabel!
     
-    @IBOutlet weak var repliedImageView: UIImageView!
-    @IBOutlet weak var retweetedImageView: UIImageView!
-    @IBOutlet weak var favoritedImageView: UIImageView!
+    @IBOutlet weak var replyImageView: UIImageView!
+    @IBOutlet weak var retweetImageView: UIImageView!
+    @IBOutlet weak var favoriteImageView: UIImageView!
+    
+    var tweet: Tweet!
+    let client = TwitterClient.sharedInstance
+    
+    @IBAction func retweet(sender: AnyObject) {
+        if self.tweet.retweeted == false {
+            client.retweet(String(tweet.id), success: { (Tweet) -> () in
+                print("yay retweeted something!")
+                self.tweet = Tweet.originalTweet
+                self.tweet.retweeted = true
+                self.numRetweets.text = self.format(self.tweet.retweetCount)
+                self.retweetImageView.hidden = self.tweet.retweeted!
+                }, failure: { (error: NSError) -> () in
+                    print("Error: \(error.localizedDescription)")
+            })
+        } else {
+            client.unretweet(String(tweet.id), success: { (Tweet) -> () in
+                print("yay retweeted something!")
+                self.tweet = Tweet
+                self.tweet.retweeted = false
+                self.numRetweets.text = self.format(self.tweet.retweetCount)
+                self.retweetImageView.hidden = self.tweet.retweeted!
+                }, failure: { (error: NSError) -> () in
+                    print("Error: \(error.localizedDescription)")
+            })
+        }
+    }
+    
+    @IBAction func favorite(sender: AnyObject) {
+        if tweet.favorited == false {
+            client.like(String(tweet.id), success: { (Tweet) -> () in
+                print("yay liked something!")
+                self.tweet = Tweet
+                self.numFavorites.text = self.format(self.tweet.favoritesCount)
+                self.favoriteImageView.hidden = self.tweet.favorited!
+                }, failure: { (error: NSError) -> () in
+                    print("Error: \(error.localizedDescription)")
+            })
+        } else {
+            client.unlike(String(tweet.id), success: { (Tweet) -> () in
+                print("yay liked something!")
+                self.tweet = Tweet
+                self.numFavorites.text = self.format(self.tweet.favoritesCount)
+                self.favoriteImageView.hidden = self.tweet.favorited!
+                }, failure: { (error: NSError) -> () in
+                    print("Error: \(error.localizedDescription)")
+            })
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -33,5 +82,19 @@ class TweetCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
+    func format(number: Int) -> String {
+        
+        let formatted: String
+        
+        if number > 1000000 {
+            formatted = String(format: "%.0f", Double(number) / 1000000.0) + "m"
+        } else if number > 1000 {
+            formatted = String(format: "%.0f", Double(number) / 1000.0) + "k"
+        } else {
+            formatted = "\(number)"
+        }
+        
+        return formatted
+    }
 }

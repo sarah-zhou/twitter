@@ -83,22 +83,12 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         view.sendSubviewToBack(backgroundPic)
         
-        self.loadData()
+        self.loadData(nil)
         
         // Initialize a UIRefreshControl
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(loadData(_:)), forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
-    }
-    
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-//        TwitterClient.sharedInstance.currentAccount({ (user) in
-//            User.currentUser = user
-//            self.user = user
-//        }) { (error: NSError) in
-//        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -106,17 +96,23 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         // Dispose of any resources that can be recreated.
     }
     
-    func loadData() {
+    func loadData(refreshControl: UIRefreshControl?) {
         let client = TwitterClient.sharedInstance
         client.userTweets((user.screenname as? String)!, exclude_replies: true, success: { (tweets: [Tweet]) in
             self.tweets = tweets
             self.setDataSource()
+            if let refreshControl = refreshControl {
+                refreshControl.endRefreshing()
+            }
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
         })
         client.userFavorites((user.screenname as? String)!, success: { (tweets: [Tweet]) in
             self.favorites = tweets
             self.setDataSource()
+            if let refreshControl = refreshControl {
+                refreshControl.endRefreshing()
+            }
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
         })
@@ -158,24 +154,12 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         cell.numRetweets.text = self.format(tweet.retweetCount)
         cell.numFavorites.text = self.format(tweet.favoritesCount)
         
-        cell.retweetedImageView.hidden = !(tweet.retweeted!)
-        cell.favoritedImageView.hidden = !(tweet.favorited!)
+        cell.retweetImageView.hidden = tweet.retweeted!
+        cell.favoriteImageView.hidden = tweet.favorited!
         
         cell.profilePic.setImageWithURL((tweet.user?.profileUrl)!)
         
         return cell
-    }
-    
-    // Makes a network request to get updated data
-    // Updates the tableView with the new data
-    // Hides the RefreshControl
-    func refreshControlAction(refreshControl: UIRefreshControl) {
-        
-        self.loadData()
-        
-        // Tell the refreshControl to stop spinning
-        refreshControl.endRefreshing()
-        
     }
     
     /*

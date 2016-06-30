@@ -29,7 +29,8 @@ class User: NSObject {
         
         let profileUrlString = dictionary["profile_image_url_https"] as? String
         if let profileUrlString = profileUrlString {
-            profileUrl = NSURL(string: profileUrlString)
+            let modified = profileUrlString.stringByReplacingOccurrencesOfString("_normal", withString: "_bigger")
+            profileUrl = NSURL(string: modified)
         }
         
         let backgroundUrlString = dictionary["profile_banner_url"] as? String

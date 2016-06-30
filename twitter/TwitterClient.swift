@@ -90,21 +90,55 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func retweet(id: String, success: () -> (), failure: (NSError) -> ()) {
+    func retweet(id: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
         
         POST("1.1/statuses/retweet/\(id).json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
-            //print("retweet: \(response)")
+            
+            let updatedTweetDictionary = response as! NSDictionary
+            let updatedTweet = Tweet(dictionary: updatedTweetDictionary)
+            success(updatedTweet)
+            
             }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
                 failure(error)
         })
     }
     
-    func like(id: String, success: () -> (), failure: (NSError) -> ()) {
+    func unretweet(id: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
+        
+        POST("1.1/statuses/unretweet/\(id).json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            let updatedTweetDictionary = response as! NSDictionary
+            let updatedTweet = Tweet(dictionary: updatedTweetDictionary)
+            success(updatedTweet)
+            
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                failure(error)
+        })
+    }
+    
+    func like(id: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
         let params = ["id": id]
         
         POST("1.1/favorites/create.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             
-            success()
+            let updatedTweetDictionary = response as! NSDictionary
+            let updatedTweet = Tweet(dictionary: updatedTweetDictionary)
+            success(updatedTweet)
+            
+            //print("favorite: \(response)")
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                failure(error)
+        })
+    }
+    
+    func unlike(id: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
+        let params = ["id": id]
+        
+        POST("1.1/favorites/destroy.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            let updatedTweetDictionary = response as! NSDictionary
+            let updatedTweet = Tweet(dictionary: updatedTweetDictionary)
+            success(updatedTweet)
             
             //print("favorite: \(response)")
             }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
@@ -152,4 +186,58 @@ class TwitterClient: BDBOAuth1SessionManager {
             self.loginFailure?(error)
         }
     }
+
+    func getRateStatuses(handler: ((response: NSDictionary?, error: NSError?) -> Void)) {
+        GET("1.1/application/rate_limit_status.json?resources=statuses", parameters:nil,
+            success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+                if let dict = response as? NSDictionary {
+                    handler(response:dict, error:nil)
+                }
+                //print("favorite: \(response)")
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                handler(response:nil, error:error)
+        })
+    }
+    
+    private static let ratePrintLabels = [
+        "/statuses/home_timeline":"home timeline",
+        "/statuses/retweets/:id":"retweet",
+        "/statuses/user_timeline":"user timeline"]
+    
+    func printRateStatuses() {
+        self.getRateStatuses { (response, error) in
+            if let error = error {
+                print("received error getting rate limits")
+            }else{
+                if let dictionary = response {
+                    for (key,value) in TwitterClient.ratePrintLabels {
+                        let dict = dictionary["resources"]!["statuses"]!![key] as! NSDictionary
+                        let limit = dict["limit"] as! Int
+                        let remaining = dict["remaining"] as! Int
+                        let epoch = dict["reset"] as! Int
+                        let resetDate = NSDate(timeIntervalSince1970: Double(epoch))
+                        print("\(value) rate: limit=\(limit), remaining=\(remaining); expires in \(TwitterClient.formatIntervalElapsed(resetDate.timeIntervalSinceNow))")
+                    }
+                }
+            }
+        }
+    }
+    
+    private static var elapsedTimeFormatter: NSDateComponentsFormatter = {
+        let formatter = NSDateComponentsFormatter()
+        formatter.unitsStyle = NSDateComponentsFormatterUnitsStyle.Abbreviated
+        formatter.collapsesLargestUnit = true
+        formatter.maximumUnitCount = 1
+        return formatter
+    }()
+    
+    static func formatTimeElapsed(sinceDate: NSDate) -> String {
+        let interval = NSDate().timeIntervalSinceDate(sinceDate)
+        return elapsedTimeFormatter.stringFromTimeInterval(interval)!
+    }
+    
+    static func formatIntervalElapsed(interval: NSTimeInterval) -> String {
+        return elapsedTimeFormatter.stringFromTimeInterval(interval)!
+    }
+    
 }

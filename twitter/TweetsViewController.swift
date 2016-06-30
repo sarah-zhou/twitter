@@ -18,17 +18,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         TwitterClient.sharedInstance.logout()
     }
     
-    @IBAction func reply(sender: AnyObject) {
-        
-    }
-    
-    @IBAction func retweet(sender: AnyObject) {
-        
-    }
-    
-    @IBAction func favorite(sender: AnyObject) {
-        
-    }
+    let client = TwitterClient.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +26,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tweetsTableView.dataSource = self
         tweetsTableView.delegate = self
         
-        self.loadData()
+        self.loadData(nil)
         
         let logo = UIImage(named: "logo")
         let imageView = UIImageView(image:logo)
@@ -44,7 +34,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         // Initialize a UIRefreshControl
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(loadData(_:)), forControlEvents: UIControlEvents.ValueChanged)
         tweetsTableView.insertSubview(refreshControl, atIndex: 0)
     }
 
@@ -53,10 +43,20 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Dispose of any resources that can be recreated.
     }
     
-    func loadData() {
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.loadData(nil)
+        tweetsTableView.reloadData()
+    }
+    
+    func loadData(refreshControl: UIRefreshControl?) {
         TwitterClient.sharedInstance.homeTimeline(20, success: { (tweets: [Tweet]) in
             self.tweets = tweets
             self.tweetsTableView.reloadData()
+            TwitterClient.sharedInstance.printRateStatuses()
+            if let refreshControl = refreshControl {
+                refreshControl.endRefreshing()
+            }
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
         })
@@ -71,52 +71,41 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let cell = tweetsTableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
         
         let tweet = tweets[indexPath.row]
+        cell.tweet = tweet
         
         let timestamp = tweet.timestamp
         let name = tweet.user?.name as? String
         let handle = tweet.user?.screenname as? String
         let text = tweet.text as? String
-        let numRetweets = tweet.retweetCount
-        let numFavorites = tweet.favoritesCount
         
         cell.tweetLabel.text = text
         cell.nameLabel.text = name
         cell.handleLabel.text = "@\(handle!)"
         
-        if numRetweets > 1000000 {
-            cell.numRetweets.text = String(format: "%.0f", Double(numRetweets) / 1000000.0) + "m"
-        } else if numRetweets > 1000 {
-            cell.numRetweets.text = String(format: "%.0f", Double(numRetweets) / 1000.0) + "k"
-        } else {
-            cell.numRetweets.text = "\(numRetweets)"
-        }
+        cell.numRetweets.text = self.format(tweet.retweetCount)
+        cell.numFavorites.text = self.format(tweet.favoritesCount)
         
-        if numFavorites > 1000000 {
-            cell.numFavorites.text = String(format: "%.0f", Double(numFavorites) / 1000000.0) + "m"
-        } else if numFavorites > 1000 {
-            cell.numFavorites.text = String(format: "%.0f", Double(numFavorites) / 1000.0) + "k"
-        } else {
-            cell.numFavorites.text = "\(numFavorites)"
-        }
-        
-        cell.retweetedImageView.hidden = !(tweet.retweeted!)
-        cell.favoritedImageView.hidden = !(tweet.favorited!)
+        cell.retweetImageView.hidden = tweet.retweeted!
+        cell.favoriteImageView.hidden = tweet.favorited!
         
         cell.profilePic.setImageWithURL((tweet.user?.profileUrl)!)
         
         return cell
     }
-
-    // Makes a network request to get updated data
-    // Updates the tableView with the new data
-    // Hides the RefreshControl
-    func refreshControlAction(refreshControl: UIRefreshControl) {
+    
+    func format(number: Int) -> String {
         
-        self.loadData()
+        let formatted: String
         
-        // Tell the refreshControl to stop spinning
-        refreshControl.endRefreshing()
+        if number > 1000000 {
+            formatted = String(format: "%.0f", Double(number) / 1000000.0) + "m"
+        } else if number > 1000 {
+            formatted = String(format: "%.0f", Double(number) / 1000.0) + "k"
+        } else {
+            formatted = "\(number)"
+        }
         
+        return formatted
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

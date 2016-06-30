@@ -28,22 +28,45 @@ class DetailViewController: UIViewController {
     }
     
     @IBAction func retweet(sender: AnyObject) {
-        client.retweet(String(tweet.id), success: { (User) -> () in
-            print("yay retweeted something!")
-            self.loadData()
-            }, failure: { (error: NSError) -> () in
-                print("Error: \(error.localizedDescription)")
-        })
+        if self.tweet.retweeted == false {
+            client.retweet(String(tweet.id), success: { (Tweet) -> () in
+                print("yay retweeted something!")
+                self.tweet = Tweet.originalTweet
+                self.tweet.retweeted = true
+                self.loadData()
+                }, failure: { (error: NSError) -> () in
+                    print("Error: \(error.localizedDescription)")
+            })
+        } else {
+            client.unretweet(String(tweet.id), success: { (Tweet) -> () in
+                print("yay retweeted something!")
+                self.tweet = Tweet
+                self.tweet.retweeted = false
+                self.loadData()
+                }, failure: { (error: NSError) -> () in
+                    print("Error: \(error.localizedDescription)")
+            })
+        }
     }
 
     @IBAction func like(sender: AnyObject) {
-        client.like(String(tweet.id), success: { (User) -> () in
-            print("yay liked something!")
-            self.loadData()
-            print("loaded")
-            }, failure: { (error: NSError) -> () in
-                print("Error: \(error.localizedDescription)")
-        })
+        if self.tweet.favorited == false {
+            client.like(String(tweet.id), success: { (Tweet) -> () in
+                print("yay liked something!")
+                self.tweet = Tweet
+                self.loadData()
+                }, failure: { (error: NSError) -> () in
+                    print("Error: \(error.localizedDescription)")
+            })
+        } else {
+            client.unlike(String(tweet.id), success: { (Tweet) -> () in
+                print("yay liked something!")
+                self.tweet = Tweet
+                self.loadData()
+                }, failure: { (error: NSError) -> () in
+                    print("Error: \(error.localizedDescription)")
+            })
+        }
     }
     
     let client = TwitterClient.sharedInstance

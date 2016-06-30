@@ -15,6 +15,8 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var handleLabel: UILabel!
     
+    @IBOutlet weak var countLabel: UILabel!
+    
     @IBAction func cancelButton(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -28,7 +30,6 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
         })
-        
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -42,25 +43,18 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
         nameLabel.text = user?.name as? String
         handleLabel.text = "@\(user?.screenname as! String)"
         
-        let task = NSURLSession.sharedSession().dataTaskWithURL((user?.profileUrl)!) { (responseData, responseUrl, error) -> Void in
-            // if responseData is not null...
-            if let data = responseData{
-                
-                // execute in UI thread
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.profilePic.image = UIImage(data: data)
-                })
-            }
-        }
+        profilePic.setImageWithURL((user?.profileUrl)!)
         
-        // Run task
-        task.resume()
-        
+        countLabel.text = "140"
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func textViewDidChange(textView: UITextView) {
+        countLabel.text = "\(140 - textView.text.characters.count)"
     }
     
     /*

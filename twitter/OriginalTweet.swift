@@ -1,15 +1,14 @@
 //
-//  Tweet.swift
+//  OriginalTweet.swift
 //  twitter
 //
-//  Created by Sarah Zhou on 6/27/16.
+//  Created by Sarah Zhou on 6/30/16.
 //  Copyright © 2016 Sarah Zhou. All rights reserved.
 //
 
 import UIKit
 
-class Tweet: NSObject {
-    
+class OriginalTweet: NSObject {
     var user: User?
     var id: Int = 0
     var text: NSString?
@@ -18,10 +17,9 @@ class Tweet: NSObject {
     var favoritesCount: Int = 0
     var retweeted: Bool?
     var favorited: Bool?
-    var originalTweet: Tweet?
     
     init(dictionary: NSDictionary) {
-        print(dictionary)
+
         user = User(dictionary: dictionary["user"] as! NSDictionary)
         
         id = (dictionary["id"] as? Int)!
@@ -41,21 +39,5 @@ class Tweet: NSObject {
             formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
             timestamp = formatter.dateFromString(timestampString)
         }
-        
-        if dictionary["retweeted_status"] != nil {
-            originalTweet = Tweet(dictionary: dictionary["retweeted_status"] as! NSDictionary)
-            
-            print("ORIGINAL STATUS")
-            print(dictionary["retweeted_status"])
-        }
-    }
-
-    class func tweetsWithArray(dictionaries: [NSDictionary]) -> [Tweet] {
-        var tweets = [Tweet]()
-        for dictionary in dictionaries {
-            let tweet = Tweet(dictionary: dictionary)
-            tweets.append(tweet)
-        }
-        return tweets
     }
 }
