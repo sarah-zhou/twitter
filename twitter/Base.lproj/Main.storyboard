@@ -216,10 +216,10 @@
                                 <color key="textColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="reply" translatesAutoresizingMaskIntoConstraints="NO" id="DtV-14-oXg">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="replied" translatesAutoresizingMaskIntoConstraints="NO" id="qpX-fm-pFj">
                                 <rect key="frame" x="15" y="302" width="25" height="32"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="replied" translatesAutoresizingMaskIntoConstraints="NO" id="qpX-fm-pFj">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="reply" translatesAutoresizingMaskIntoConstraints="NO" id="DtV-14-oXg">
                                 <rect key="frame" x="15" y="302" width="25" height="32"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1PD-zd-aRk">
@@ -228,10 +228,10 @@
                                     <action selector="reply:" destination="FKb-CY-Scv" eventType="touchUpInside" id="vge-OR-oQZ"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="retweet" translatesAutoresizingMaskIntoConstraints="NO" id="tGj-k6-YMW">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="retweeted" translatesAutoresizingMaskIntoConstraints="NO" id="aZG-ce-nlB">
                                 <rect key="frame" x="120" y="302" width="25" height="32"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="retweeted" translatesAutoresizingMaskIntoConstraints="NO" id="aZG-ce-nlB">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="retweet" translatesAutoresizingMaskIntoConstraints="NO" id="tGj-k6-YMW">
                                 <rect key="frame" x="120" y="302" width="25" height="32"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bPz-ob-Qdn">
@@ -240,10 +240,10 @@
                                     <action selector="retweet:" destination="FKb-CY-Scv" eventType="touchUpInside" id="0rm-RY-Ulo"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="favorite" translatesAutoresizingMaskIntoConstraints="NO" id="tJs-ZO-u1u">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="favorited" translatesAutoresizingMaskIntoConstraints="NO" id="xfZ-NV-aLA">
                                 <rect key="frame" x="225" y="302" width="25" height="32"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="favorited" translatesAutoresizingMaskIntoConstraints="NO" id="xfZ-NV-aLA">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="favorite" translatesAutoresizingMaskIntoConstraints="NO" id="tJs-ZO-u1u">
                                 <rect key="frame" x="225" y="302" width="25" height="32"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="auY-fe-TCL">
@@ -294,14 +294,14 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
-                        <outlet property="favoritedImageView" destination="xfZ-NV-aLA" id="zRX-Du-WbQ"/>
+                        <outlet property="favoriteImageView" destination="tJs-ZO-u1u" id="Di8-6o-2y5"/>
                         <outlet property="handleLabel" destination="gke-bA-UfC" id="qcC-vb-HLc"/>
                         <outlet property="nameLabel" destination="rhB-Oq-467" id="8aD-bM-CBd"/>
                         <outlet property="numFavorites" destination="5Oi-WD-JzW" id="oZJ-uK-eui"/>
                         <outlet property="numRetweets" destination="FwR-eh-fmE" id="BY2-Ad-FVF"/>
                         <outlet property="profilePic" destination="64P-zi-6VV" id="2PD-y5-gPz"/>
-                        <outlet property="repliedImageView" destination="qpX-fm-pFj" id="gC6-Bh-ru6"/>
-                        <outlet property="retweetedImageView" destination="aZG-ce-nlB" id="2mY-wd-LAj"/>
+                        <outlet property="replyImageView" destination="DtV-14-oXg" id="XLk-0c-As1"/>
+                        <outlet property="retweetImageView" destination="tGj-k6-YMW" id="QvV-Ov-HqM"/>
                         <outlet property="timestampLabel" destination="E1G-oy-Jip" id="I2j-xs-nnN"/>
                         <outlet property="tweetLabel" destination="Rj3-lH-uxs" id="yPu-Mi-gBL"/>
                     </connections>

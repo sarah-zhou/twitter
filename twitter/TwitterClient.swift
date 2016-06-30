@@ -84,26 +84,29 @@ class TwitterClient: BDBOAuth1SessionManager {
         let params = ["status": status]
 
         POST("1.1/statuses/update.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
-            print("tweet: \(response)")
+            //print("tweet: \(response)")
             }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
                 failure(error)
         })
     }
     
-    func retweet(id: String, success: (User) -> (), failure: (NSError) -> ()) {
+    func retweet(id: String, success: () -> (), failure: (NSError) -> ()) {
         
         POST("1.1/statuses/retweet/\(id).json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
-            print("retweet: \(response)")
+            //print("retweet: \(response)")
             }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
                 failure(error)
         })
     }
     
-    func like(id: String, success: (User) -> (), failure: (NSError) -> ()) {
+    func like(id: String, success: () -> (), failure: (NSError) -> ()) {
         let params = ["id": id]
         
         POST("1.1/favorites/create.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
-            print("favorite: \(response)")
+            
+            success()
+            
+            //print("favorite: \(response)")
             }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
                 failure(error)
         })

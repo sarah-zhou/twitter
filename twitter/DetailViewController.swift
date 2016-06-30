@@ -19,17 +19,18 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var numRetweets: UILabel!
     @IBOutlet weak var numFavorites: UILabel!
     
-    @IBOutlet weak var repliedImageView: UIImageView!
-    @IBOutlet weak var retweetedImageView: UIImageView!
-    @IBOutlet weak var favoritedImageView: UIImageView!
+    @IBOutlet weak var replyImageView: UIImageView!
+    @IBOutlet weak var retweetImageView: UIImageView!
+    @IBOutlet weak var favoriteImageView: UIImageView!
     
     @IBAction func reply(sender: AnyObject) {
         
     }
     
     @IBAction func retweet(sender: AnyObject) {
-        client.tweet(String(tweet.id), success: { (User) -> () in
+        client.retweet(String(tweet.id), success: { (User) -> () in
             print("yay retweeted something!")
+            self.loadData()
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
         })
@@ -37,7 +38,9 @@ class DetailViewController: UIViewController {
 
     @IBAction func like(sender: AnyObject) {
         client.like(String(tweet.id), success: { (User) -> () in
-            print("yay retweeted something!")
+            print("yay liked something!")
+            self.loadData()
+            print("loaded")
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
         })
@@ -50,9 +53,12 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
 
         self.title = "Tweet"
-        
-        retweetedImageView.hidden = !(tweet.retweeted!)
-        favoritedImageView.hidden = !(tweet.favorited!)
+        self.loadData()
+    }
+    
+    func loadData() {
+        retweetImageView.hidden = tweet.retweeted!
+        favoriteImageView.hidden = tweet.favorited!
         
         nameLabel.text = tweet.user?.name as? String
         handleLabel.text = "@\(tweet.user?.screenname as! String)"
@@ -61,23 +67,7 @@ class DetailViewController: UIViewController {
         numRetweets.text = "\(tweet.retweetCount)"
         numFavorites.text = "\(tweet.favoritesCount)"
         
-        let imageUrl = tweet.user?.profileUrl
-        
-        // Download task:
-        // - sharedSession = global NSURLCache, NSHTTPCookieStorage and NSURLCredentialStorage objects.
-        let task = NSURLSession.sharedSession().dataTaskWithURL(imageUrl!) { (responseData, responseUrl, error) -> Void in
-            // if responseData is not null...
-            if let data = responseData{
-                
-                // execute in UI thread
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.profilePic.image = UIImage(data: data)
-                })
-            }
-        }
-        
-        // Run task
-        task.resume()
+        profilePic.setImageWithURL((tweet.user?.profileUrl)!)
         
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
@@ -92,7 +82,7 @@ class DetailViewController: UIViewController {
     
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showOtherUser" {
+        if segue.identifier == "showOtherUser" && tweet.user != User.currentUser {
             let profileViewController = segue.destinationViewController as! ProfileViewController
             profileViewController.user = tweet.user
         }
