@@ -70,7 +70,15 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tweetsTableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
         
-        let tweet = tweets[indexPath.row]
+        var tweet = tweets[indexPath.row]
+        if tweet.originalTweet != nil {
+            cell.retweeterImageView.hidden = false
+            cell.retweeterLabel.text = "@\(tweet.user!.name!) Retweeted"
+            tweet = tweet.originalTweet!
+        } else {
+            cell.retweeterImageView.hidden = true
+            cell.retweeterLabel.text = ""
+        }
         cell.tweet = tweet
         
         let timestamp = tweet.timestamp
@@ -117,7 +125,12 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let tweet = tweets[indexPath!.row]
             
             let detailViewController = segue.destinationViewController as! DetailViewController
-            detailViewController.tweet = tweet
+            if tweet.originalTweet != nil {
+                detailViewController.tweet = tweet.originalTweet
+            } else {
+                print("PASSED")
+                detailViewController.tweet = tweet
+            }
         }
     }
 }

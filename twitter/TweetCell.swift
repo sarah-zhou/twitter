@@ -23,6 +23,9 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var retweetImageView: UIImageView!
     @IBOutlet weak var favoriteImageView: UIImageView!
     
+    @IBOutlet weak var retweeterLabel: UILabel!
+    @IBOutlet weak var retweeterImageView: UIImageView!
+    
     var tweet: Tweet!
     let client = TwitterClient.sharedInstance
     

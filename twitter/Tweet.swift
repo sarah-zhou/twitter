@@ -21,7 +21,6 @@ class Tweet: NSObject {
     var originalTweet: Tweet?
     
     init(dictionary: NSDictionary) {
-        print(dictionary)
         user = User(dictionary: dictionary["user"] as! NSDictionary)
         
         id = (dictionary["id"] as? Int)!
@@ -44,9 +43,6 @@ class Tweet: NSObject {
         
         if dictionary["retweeted_status"] != nil {
             originalTweet = Tweet(dictionary: dictionary["retweeted_status"] as! NSDictionary)
-            
-            print("ORIGINAL STATUS")
-            print(dictionary["retweeted_status"])
         }
     }
 
