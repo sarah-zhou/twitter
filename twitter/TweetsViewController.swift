@@ -67,7 +67,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tweets.count
-        // how to account for infinite scrolling?
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -75,14 +74,15 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         var tweet = tweets[indexPath.row]
         if tweet.originalTweet != nil {
+            cell.retweeterImageViewTopConstraint.constant = -4
             cell.retweeterImageView.hidden = false
             cell.retweeterLabel.hidden = false
             cell.retweeterLabel.text = "\(tweet.user!.name!) Retweeted"
             tweet = tweet.originalTweet!
         } else {
+            cell.retweeterImageViewTopConstraint.constant = -30
             cell.retweeterImageView.hidden = true
             cell.retweeterLabel.text = ""
-            
             cell.retweeterLabel.hidden = true
         }
         cell.tweet = tweet
@@ -93,7 +93,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let text = tweet.text as? String
         
         let seconds = timestamp!.timeIntervalSinceNow as NSTimeInterval
-        cell.timestampLabel.text = formatDate(seconds)
+        cell.timestampLabel.text = formatDate((-1)*seconds)
         
         cell.tweetLabel.text = text
         cell.nameLabel.text = name
@@ -101,9 +101,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         cell.numRetweets.text = self.format(tweet.retweetCount)
         cell.numFavorites.text = self.format(tweet.favoritesCount)
-        
-        cell.retweetImageView.hidden = tweet.retweeted!
-        cell.favoriteImageView.hidden = tweet.favorited!
         
         cell.profilePic.setImageWithURL((tweet.user?.profileUrl)!)
         
@@ -129,13 +126,13 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         var formatted = ""
         
         if number < 60 {
-            formatted = "\(number)s"
+            formatted = String(format: "%.0f", Double(number)) + "s"
         } else if number < 3600 {
-            formatted = "\(number)m"
-        } else if number < 216000 {
-            formatted = "\(number)h"
-        } else if number < 5184000 {
-            formatted = "\(number)d"
+            formatted = String(format: "%.0f", Double(number) / 60.0) + "m"
+        } else if number < 86400 {
+            formatted = String(format: "%.0f", Double(number) / 3600.0) + "h"
+        } else if number < 2073600 {
+            formatted = String(format: "%.0f", Double(number) / 86400.0) + "d"
         }
         
         return formatted
@@ -143,9 +140,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetailViewController" {
-            let button = sender as! UIButton
-            let contentView = button.superview! as UIView
-            let cell = contentView.superview as! TweetCell
+            let cell = sender as! TweetCell
             let indexPath = tweetsTableView.indexPathForCell(cell)
             let tweet = tweets[indexPath!.row]
             

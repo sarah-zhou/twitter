@@ -11,9 +11,9 @@ The following **required** functionality is completed:
 - [X] User can sign in using OAuth login flow
 - [X] The current signed in user will be persisted across restarts
 - [X] User can view last 20 tweets from their home timeline
-- [ ] In the home timeline, user can view tweet with the user profile picture, username, tweet text, and timestamp.
+- [X] In the home timeline, user can view tweet with the user profile picture, username, tweet text, and timestamp.
 - [X] User can pull to refresh.
-- [ ] User should display the relative timestamp for each tweet "8m", "7h"
+- [X] User should display the relative timestamp for each tweet "8m", "7h"
 - [X] Retweeting and favoriting should increment the retweet and favorite count.
 - [X] User can tap on a tweet to view it, with controls to retweet, favorite, and reply.
 - [X] User can compose a new tweet by tapping on a compose button.

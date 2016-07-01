@@ -129,8 +129,8 @@ class OtherUserViewController: UIViewController, UITableViewDataSource, UITableV
         cell.numRetweets.text = self.format(tweet.retweetCount)
         cell.numFavorites.text = self.format(tweet.favoritesCount)
         
-        cell.retweetImageView.hidden = tweet.retweeted!
-        cell.favoriteImageView.hidden = tweet.favorited!
+        //cell.retweetImageView.hidden = tweet.retweeted!
+        //cell.favoriteImageView.hidden = tweet.favorited!
         
         cell.profilePic.setImageWithURL((tweet.user?.profileUrl)!)
         
