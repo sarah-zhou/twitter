@@ -41,6 +41,8 @@ class Tweet: NSObject {
             timestamp = formatter.dateFromString(timestampString)
         }
         
+        //let seconds = timestamp?.timeIntervalSinceNow
+        
         if dictionary["retweeted_status"] != nil {
             originalTweet = Tweet(dictionary: dictionary["retweeted_status"] as! NSDictionary)
         }

@@ -73,7 +73,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         var tweet = tweets[indexPath.row]
         if tweet.originalTweet != nil {
             cell.retweeterImageView.hidden = false
-            cell.retweeterLabel.text = "@\(tweet.user!.name!) Retweeted"
+            cell.retweeterLabel.text = "\(tweet.user!.name!) Retweeted"
             tweet = tweet.originalTweet!
         } else {
             cell.retweeterImageView.hidden = true
@@ -128,7 +128,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             if tweet.originalTweet != nil {
                 detailViewController.tweet = tweet.originalTweet
             } else {
-                print("PASSED")
                 detailViewController.tweet = tweet
             }
         }

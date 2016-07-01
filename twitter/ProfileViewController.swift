@@ -79,6 +79,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         numFollowing.text = self.format(user.following)
         
         profilePic.setImageWithURL((user?.profileUrl)!)
+        profilePic.layer.borderWidth = 2
+        profilePic.layer.borderColor = UIColor.whiteColor().CGColor
         backgroundPic.setImageWithURL((user?.backgroundUrl)!)
         
         view.sendSubviewToBack(backgroundPic)
@@ -140,7 +142,16 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
         
-        let tweet = tableData[indexPath.row]
+        var tweet = tableData[indexPath.row]
+        if tweet.originalTweet != nil {
+            cell.retweeterImageView.hidden = false
+            cell.retweeterLabel.text = "\(tweet.user!.name!) Retweeted"
+            tweet = tweet.originalTweet!
+        } else {
+            cell.retweeterImageView.hidden = true
+            cell.retweeterLabel.text = ""
+        }
+        cell.tweet = tweet
         
         let timestamp = tweet.timestamp
         let name = tweet.user?.name as? String
@@ -162,14 +173,21 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         return cell
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "showDetailViewController" {
+            let button = sender as! UIButton
+            let contentView = button.superview! as UIView
+            let cell = contentView.superview as! TweetCell
+            let indexPath = tableView.indexPathForCell(cell)
+            let tweet = tweets[indexPath!.row]
+            
+            let detailViewController = segue.destinationViewController as! DetailViewController
+            if tweet.originalTweet != nil {
+                detailViewController.tweet = tweet.originalTweet
+            } else {
+                detailViewController.tweet = tweet
+            }
+        }
     }
-    */
 
 }
