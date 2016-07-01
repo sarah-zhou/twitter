@@ -33,6 +33,8 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    var replyToUsername: String!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -46,6 +48,10 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
         profilePic.setImageWithURL((user?.profileUrl)!)
         
         countLabel.text = "140"
+        
+        if replyToUsername != nil {
+            tweetTextView.text = "@\(replyToUsername): "
+        }
     }
 
     override func didReceiveMemoryWarning() {

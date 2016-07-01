@@ -105,7 +105,7 @@ class DetailViewController: UIViewController {
     
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showOtherUser" && tweet.user != User.currentUser {
+        if segue.identifier == "showOtherUser" {
             let profileViewController = segue.destinationViewController as! ProfileViewController
             profileViewController.user = tweet.user
         }

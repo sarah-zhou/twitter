@@ -130,6 +130,15 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             } else {
                 detailViewController.tweet = tweet
             }
+        } else if segue.identifier == "replyTweet" {
+            let button = sender as! UIButton
+            let contentView = button.superview! as UIView
+            let cell = contentView.superview as! TweetCell
+            let indexPath = tweetsTableView.indexPathForCell(cell)
+            let tweet = tweets[indexPath!.row]
+            
+            let newTweetViewController = segue.destinationViewController as! NewTweetViewController
+            newTweetViewController.replyToUsername = tweet.user?.screenname as? String
         }
     }
 }
