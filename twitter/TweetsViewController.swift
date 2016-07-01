@@ -26,6 +26,9 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tweetsTableView.dataSource = self
         tweetsTableView.delegate = self
         
+        tweetsTableView.estimatedRowHeight = 200
+        tweetsTableView.rowHeight = UITableViewAutomaticDimension
+        
         self.loadData(nil)
         
         let logo = UIImage(named: "logo")
@@ -73,11 +76,14 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         var tweet = tweets[indexPath.row]
         if tweet.originalTweet != nil {
             cell.retweeterImageView.hidden = false
+            cell.retweeterLabel.hidden = false
             cell.retweeterLabel.text = "\(tweet.user!.name!) Retweeted"
             tweet = tweet.originalTweet!
         } else {
             cell.retweeterImageView.hidden = true
             cell.retweeterLabel.text = ""
+            
+            cell.retweeterLabel.hidden = true
         }
         cell.tweet = tweet
         
@@ -85,6 +91,9 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let name = tweet.user?.name as? String
         let handle = tweet.user?.screenname as? String
         let text = tweet.text as? String
+        
+        let seconds = timestamp!.timeIntervalSinceNow as NSTimeInterval
+        cell.timestampLabel.text = formatDate(seconds)
         
         cell.tweetLabel.text = text
         cell.nameLabel.text = name
@@ -103,7 +112,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func format(number: Int) -> String {
         
-        let formatted: String
+        var formatted: String
         
         if number > 1000000 {
             formatted = String(format: "%.0f", Double(number) / 1000000.0) + "m"
@@ -111,6 +120,22 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             formatted = String(format: "%.0f", Double(number) / 1000.0) + "k"
         } else {
             formatted = "\(number)"
+        }
+        
+        return formatted
+    }
+    
+    func formatDate(number: NSTimeInterval) -> String {
+        var formatted = ""
+        
+        if number < 60 {
+            formatted = "\(number)s"
+        } else if number < 3600 {
+            formatted = "\(number)m"
+        } else if number < 216000 {
+            formatted = "\(number)h"
+        } else if number < 5184000 {
+            formatted = "\(number)d"
         }
         
         return formatted

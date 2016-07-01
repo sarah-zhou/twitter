@@ -108,6 +108,9 @@ class DetailViewController: UIViewController {
         if segue.identifier == "showOtherUser" {
             let profileViewController = segue.destinationViewController as! ProfileViewController
             profileViewController.user = tweet.user
+        } else if segue.identifier == "replyTweet" {
+            let newTweetViewController = segue.destinationViewController as! NewTweetViewController
+            newTweetViewController.replyToUsername = tweet.user?.screenname as? String
         }
     }
 }

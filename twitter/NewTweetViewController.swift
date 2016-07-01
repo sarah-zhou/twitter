@@ -27,10 +27,10 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
         
         client.tweet(tweetTextView.text, success: {
             print("yay tweeted something!")
+            self.dismissViewControllerAnimated(true, completion: nil)
             }, failure: { (error: NSError) -> () in
                 print("Error: \(error.localizedDescription)")
         })
-        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     var replyToUsername: String!
@@ -61,6 +61,11 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
     
     func textViewDidChange(textView: UITextView) {
         countLabel.text = "\(140 - textView.text.characters.count)"
+        if 140 - textView.text.characters.count < 0 {
+            countLabel.textColor = UIColor.redColor()
+        } else {
+            countLabel.textColor = UIColor.blackColor()
+        }
     }
     
     /*
