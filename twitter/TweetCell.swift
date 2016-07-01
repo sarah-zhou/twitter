@@ -19,9 +19,12 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var numRetweets: UILabel!
     @IBOutlet weak var numFavorites: UILabel!
     
-    @IBOutlet weak var replyImageView: UIImageView!
-    @IBOutlet weak var retweetImageView: UIImageView!
-    @IBOutlet weak var favoriteImageView: UIImageView!
+
+    @IBOutlet weak var retweeterImageViewTopConstraint: NSLayoutConstraint!
+    
+//    @IBOutlet weak var replyImageView: UIImageView!
+//    @IBOutlet weak var retweetImageView: UIImageView!
+//    @IBOutlet weak var favoriteImageView: UIImageView!
     
     @IBOutlet weak var retweeterLabel: UILabel!
     @IBOutlet weak var retweeterImageView: UIImageView!
@@ -29,14 +32,15 @@ class TweetCell: UITableViewCell {
     var tweet: Tweet!
     let client = TwitterClient.sharedInstance
     
-    @IBAction func retweet(sender: AnyObject) {
+    @IBAction func retweet(sender: UIButton) {
         if self.tweet.retweeted == false {
             client.retweet(String(tweet.id), success: { (Tweet) -> () in
                 print("yay retweeted something!")
                 self.tweet = Tweet.originalTweet
+                sender.selected = true
                 self.tweet.retweeted = true
                 self.numRetweets.text = self.format(self.tweet.retweetCount)
-                self.retweetImageView.hidden = self.tweet.retweeted!
+                //self.retweetImageView.hidden = self.tweet.retweeted!
                 }, failure: { (error: NSError) -> () in
                     print("Error: \(error.localizedDescription)")
             })
@@ -44,22 +48,24 @@ class TweetCell: UITableViewCell {
             client.unretweet(String(tweet.id), success: { (Tweet) -> () in
                 print("yay retweeted something!")
                 self.tweet = Tweet
+                sender.selected = false
                 self.tweet.retweeted = false
                 self.numRetweets.text = self.format(self.tweet.retweetCount)
-                self.retweetImageView.hidden = self.tweet.retweeted!
+                //self.retweetImageView.hidden = self.tweet.retweeted!
                 }, failure: { (error: NSError) -> () in
                     print("Error: \(error.localizedDescription)")
             })
         }
     }
     
-    @IBAction func favorite(sender: AnyObject) {
+    @IBAction func favorite(sender: UIButton) {
         if tweet.favorited == false {
             client.like(String(tweet.id), success: { (Tweet) -> () in
                 print("yay liked something!")
                 self.tweet = Tweet
+                sender.selected = true
                 self.numFavorites.text = self.format(self.tweet.favoritesCount)
-                self.favoriteImageView.hidden = self.tweet.favorited!
+                //self.favoriteImageView.hidden = self.tweet.favorited!
                 }, failure: { (error: NSError) -> () in
                     print("Error: \(error.localizedDescription)")
             })
@@ -67,8 +73,9 @@ class TweetCell: UITableViewCell {
             client.unlike(String(tweet.id), success: { (Tweet) -> () in
                 print("yay liked something!")
                 self.tweet = Tweet
+                sender.selected = false
                 self.numFavorites.text = self.format(self.tweet.favoritesCount)
-                self.favoriteImageView.hidden = self.tweet.favorited!
+                //self.favoriteImageView.hidden = self.tweet.favorited!
                 }, failure: { (error: NSError) -> () in
                     print("Error: \(error.localizedDescription)")
             })

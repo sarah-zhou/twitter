@@ -70,6 +70,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.dataSource = self
         tableView.delegate = self
         
+        tableView.estimatedRowHeight = 200
+        tableView.rowHeight = UITableViewAutomaticDimension
+        
         nameLabel.text = user.name as? String
         handleLabel.text = "@\(user.screenname as! String)"
         bioLabel.text = user.tagline as? String
@@ -134,6 +137,22 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         return formatted
     }
+    
+    func formatDate(number: NSTimeInterval) -> String {
+        var formatted = ""
+        
+        if number < 60 {
+            formatted = String(format: "%.0f", Double(number)) + "s"
+        } else if number < 3600 {
+            formatted = String(format: "%.0f", Double(number) / 60.0) + "m"
+        } else if number < 86400 {
+            formatted = String(format: "%.0f", Double(number) / 3600.0) + "h"
+        } else if number < 2073600 {
+            formatted = String(format: "%.0f", Double(number) / 86400.0) + "d"
+        }
+        
+        return formatted
+    }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableData.count
@@ -142,12 +161,16 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
         
+        cell.selectionStyle = .None
+        
         var tweet = tableData[indexPath.row]
         if tweet.originalTweet != nil {
+            cell.retweeterImageViewTopConstraint.constant = -4
             cell.retweeterImageView.hidden = false
             cell.retweeterLabel.text = "\(tweet.user!.name!) Retweeted"
             tweet = tweet.originalTweet!
         } else {
+            cell.retweeterImageViewTopConstraint.constant = -30
             cell.retweeterImageView.hidden = true
             cell.retweeterLabel.text = ""
         }
@@ -157,7 +180,10 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let name = tweet.user?.name as? String
         let handle = tweet.user?.screenname as? String
         let text = tweet.text as? String
-        
+    
+        let seconds = timestamp!.timeIntervalSinceNow as NSTimeInterval
+        cell.timestampLabel.text = formatDate((-1)*seconds)
+
         cell.tweetLabel.text = text
         cell.nameLabel.text = name
         cell.handleLabel.text = "@\(handle!)"
@@ -165,8 +191,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         cell.numRetweets.text = self.format(tweet.retweetCount)
         cell.numFavorites.text = self.format(tweet.favoritesCount)
         
-        cell.retweetImageView.hidden = tweet.retweeted!
-        cell.favoriteImageView.hidden = tweet.favorited!
+        //cell.retweetImageView.hidden = tweet.retweeted!
+        //cell.favoriteImageView.hidden = tweet.favorited!
         
         cell.profilePic.setImageWithURL((tweet.user?.profileUrl)!)
         
