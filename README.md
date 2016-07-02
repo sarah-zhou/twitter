@@ -2,7 +2,7 @@
 
 **twitter** is a basic twitter app to read and compose tweets the [Twitter API](https://apps.twitter.com/).
 
-Time spent: **20** hours spent in total
+Time spent: **30** hours spent in total
 
 ## User Stories
 
@@ -31,7 +31,7 @@ The following **optional** features are implemented:
 - [X] User should be able to unretweet and unfavorite and should decrement the retweet and favorite count.
 - [X] When composing, you should have a countdown in the upper right for the tweet limit.
 - [ ] After creating a new tweet, a user should be able to view it in the timeline immediately without refetching the timeline from the network.
-- [ ] User can reply to any tweet, and replies should be prefixed with the username and the reply_id should be set when posting the tweet
+- [X] User can reply to any tweet, and replies should be prefixed with the username and the reply_id should be set when posting the tweet
 - [ ] Links in tweets are clickable
 - [ ] User can switch between timeline, mentions, or profile view through a tab bar
 - [ ] Pulling down the profile page should blur and resize the header image.
@@ -41,17 +41,18 @@ The following **additional** features are implemented:
 - List anything else that you can get done to improve the app functionality!
 - [X] Displays the original tweet when someone retweeted it 
 - [X] Shows who retweeted above the original tweet
+- [X] Launch screen
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1.
-2.
+1. Allowing the bio information to push upwards when scrolling through the tableview
+2. The last optional 
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/qKDnc5O.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 

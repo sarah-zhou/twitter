@@ -28,12 +28,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     @IBAction func back(sender: AnyObject) {
-        let presentingViewController: UIViewController! = self.presentingViewController
-        
-        self.dismissViewControllerAnimated(false) {
-            // go back to MainMenuView as the eyes of the user
-            presentingViewController.dismissViewControllerAnimated(false, completion: nil)
-        }
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     private func setDataSource() {

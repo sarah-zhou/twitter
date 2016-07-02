@@ -127,18 +127,6 @@
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5ae-s5-ciH">
-                                                    <rect key="frame" x="63" y="106" width="20" height="25"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="25" id="04e-qa-pVq"/>
-                                                        <constraint firstAttribute="width" constant="20" id="ufv-Pq-Niw"/>
-                                                    </constraints>
-                                                    <state key="normal" image="reply"/>
-                                                    <state key="selected" image="replied"/>
-                                                    <connections>
-                                                        <segue destination="gJt-S0-w0t" kind="presentation" identifier="replyTweet" id="whJ-l5-i4E"/>
-                                                    </connections>
-                                                </button>
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oAx-dh-Bld">
                                                     <rect key="frame" x="133" y="106" width="20" height="25"/>
                                                     <state key="normal" image="retweet"/>
@@ -180,6 +168,18 @@
                                                         <constraint firstAttribute="height" constant="36" id="pU4-qQ-tKe"/>
                                                     </constraints>
                                                 </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5ae-s5-ciH">
+                                                    <rect key="frame" x="63" y="106" width="20" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="04e-qa-pVq"/>
+                                                        <constraint firstAttribute="width" constant="20" id="ufv-Pq-Niw"/>
+                                                    </constraints>
+                                                    <state key="normal" image="reply"/>
+                                                    <state key="selected" image="replied"/>
+                                                    <connections>
+                                                        <segue destination="gJt-S0-w0t" kind="presentation" identifier="replyTweet" id="whJ-l5-i4E"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="Y1G-fN-IRS" firstAttribute="leading" secondItem="9cJ-1D-buA" secondAttribute="trailing" constant="8" id="07j-5g-OlR"/>
@@ -237,7 +237,7 @@
                                             <outlet property="retweeterLabel" destination="bSW-cX-YRD" id="mhk-6n-spK"/>
                                             <outlet property="timestampLabel" destination="Co1-qn-avJ" id="raP-jN-9Re"/>
                                             <outlet property="tweetLabel" destination="I6c-jc-0Mq" id="uYN-Y6-IRU"/>
-                                            <segue destination="FKb-CY-Scv" kind="show" id="do6-OB-tAc"/>
+                                            <segue destination="FKb-CY-Scv" kind="show" identifier="showDetailViewController" id="do6-OB-tAc"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -749,10 +749,10 @@
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="constraints">
-                                                    <exclude reference="uDg-kG-bnW"/>
                                                     <exclude reference="Tof-8L-xBQ"/>
-                                                    <exclude reference="eCp-xL-Qli"/>
                                                     <exclude reference="Yay-AF-hlU"/>
+                                                    <exclude reference="eCp-xL-Qli"/>
+                                                    <exclude reference="uDg-kG-bnW"/>
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
@@ -1197,7 +1197,7 @@
         <image name="timeline" width="33" height="33"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="whJ-l5-i4E"/>
+        <segue reference="Akp-w1-3Gh"/>
         <segue reference="5nS-Jz-b9d"/>
     </inferredMetricsTieBreakers>
 </document>

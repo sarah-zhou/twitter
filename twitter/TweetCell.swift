@@ -18,13 +18,8 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var timestampLabel: UILabel!
     @IBOutlet weak var numRetweets: UILabel!
     @IBOutlet weak var numFavorites: UILabel!
-    
 
     @IBOutlet weak var retweeterImageViewTopConstraint: NSLayoutConstraint!
-    
-//    @IBOutlet weak var replyImageView: UIImageView!
-//    @IBOutlet weak var retweetImageView: UIImageView!
-//    @IBOutlet weak var favoriteImageView: UIImageView!
     
     @IBOutlet weak var retweeterLabel: UILabel!
     @IBOutlet weak var retweeterImageView: UIImageView!
@@ -40,7 +35,6 @@ class TweetCell: UITableViewCell {
                 sender.selected = true
                 self.tweet.retweeted = true
                 self.numRetweets.text = self.format(self.tweet.retweetCount)
-                //self.retweetImageView.hidden = self.tweet.retweeted!
                 }, failure: { (error: NSError) -> () in
                     print("Error: \(error.localizedDescription)")
             })
@@ -51,7 +45,6 @@ class TweetCell: UITableViewCell {
                 sender.selected = false
                 self.tweet.retweeted = false
                 self.numRetweets.text = self.format(self.tweet.retweetCount)
-                //self.retweetImageView.hidden = self.tweet.retweeted!
                 }, failure: { (error: NSError) -> () in
                     print("Error: \(error.localizedDescription)")
             })
@@ -65,7 +58,6 @@ class TweetCell: UITableViewCell {
                 self.tweet = Tweet
                 sender.selected = true
                 self.numFavorites.text = self.format(self.tweet.favoritesCount)
-                //self.favoriteImageView.hidden = self.tweet.favorited!
                 }, failure: { (error: NSError) -> () in
                     print("Error: \(error.localizedDescription)")
             })
@@ -75,7 +67,6 @@ class TweetCell: UITableViewCell {
                 self.tweet = Tweet
                 sender.selected = false
                 self.numFavorites.text = self.format(self.tweet.favoritesCount)
-                //self.favoriteImageView.hidden = self.tweet.favorited!
                 }, failure: { (error: NSError) -> () in
                     print("Error: \(error.localizedDescription)")
             })
